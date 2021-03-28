@@ -1,7 +1,7 @@
 {
-  "name": "fast-test",
+  "name": "flug",
   "version": "0.0.0",
-  "description": "Fast Test: Super Intuitive Test Runner. Fast to Pick Up, Run and Debug.",
+  "description": "Flug: The Test Runner with the Shortest Time to Takeoff",
   "main": "index.js",
   "files": [
     "index.js"
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DanielJDufour/fast-test.git"
+    "url": "git+https://github.com/DanielJDufour/flug.git"
   },
   "keywords": [
     "runner",
@@ -35,7 +35,7 @@
   "author": "Daniel J. Dufour",
   "license": "CC0-1.0",
   "bugs": {
-    "url": "https://github.com/DanielJDufour/fast-test/issues"
+    "url": "https://github.com/DanielJDufour/flug/issues"
   },
-  "homepage": "https://github.com/DanielJDufour/fast-test#readme"
+  "homepage": "https://github.com/DanielJDufour/flug#readme"
 }
