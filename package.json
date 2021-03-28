@@ -1,0 +1,41 @@
+{
+  "name": "fast-test",
+  "version": "0.0.0",
+  "description": "Fast Test: Super Intuitive Test Runner. Fast to Pick Up, Run and Debug.",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielJDufour/fast-test.git"
+  },
+  "keywords": [
+    "runner",
+    "test",
+    "testing",
+    "fast",
+    "quick",
+    "debug",
+    "intuitive",
+    "tdd",
+    "assert",
+    "assertions",
+    "promise",
+    "promises",
+    "async",
+    "function",
+    "await",
+    "unit",
+    "expect"
+  ],
+  "author": "Daniel J. Dufour",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/DanielJDufour/fast-test/issues"
+  },
+  "homepage": "https://github.com/DanielJDufour/fast-test#readme"
+}
