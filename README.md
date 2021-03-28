@@ -22,12 +22,12 @@ Flug exposes only one assertion function `eq`, which does deep equality checking
 
 # install
 ```bash
-npm install fast-test
+npm install flug
 ```
 
 # usage
 ```
-const test = require("fast-test");
+const test = require("flug");
 
 test("addition", ({ eq }) => {
   eq(1 + 1, 2);
