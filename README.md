@@ -26,7 +26,7 @@ npm install flug
 ```
 
 # usage
-```
+```js
 const test = require("flug");
 
 test("addition", ({ eq }) => {
