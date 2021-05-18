@@ -29,7 +29,14 @@ npm install flug
 ```js
 const test = require("flug");
 
+// simple sync usage
 test("addition", ({ eq }) => {
+  eq(1 + 1, 2);
+});
+
+// simple async usage
+test("sleep", async ({ eq }) => {
+  await sleep(5);
   eq(1 + 1, 2);
 });
 ```

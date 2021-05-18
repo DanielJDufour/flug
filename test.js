@@ -2,17 +2,34 @@
 const assert = require("assert");
 const child_process = require("child_process");
 
-assert.strictEqual(
-  child_process.execSync("node ./examples/test.addition.js 2>&1", { cwd: __dirname }).toString(),
-  "\x1B[32msuccess: addition\x1B[0m\n"
-);
+const $ = str => {
+  const output = child_process.execSync(str + " 2>&1", { cwd: __dirname }).toString();
+  // console.log("output:", output);
+  return output;
+};
 
-assert.strictEqual(
-  child_process.execSync("node ./examples/test.error.js 2>&1", { cwd: __dirname }).toString(),
-  "\n\x1B[31mfailed: error\x1B[0m\nerror\n"
-);
+const t = (cmd, expected) => {
+  const out = $(cmd);
+  try {
+    assert.strictEqual(out, expected);
+    console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
+  } catch (error) {
+    console.log("out:", [out]);
+    throw error;
+  }
+};
 
-const log = child_process.execSync("node ./examples/test.failure.js 2>&1", { cwd: __dirname }).toString().trim().replace(/\n/g,"");
+t("node ./examples/test.addition.js", "\x1B[32msuccess: addition\x1B[0m\n");
+t("node ./examples/test.error.js", "\n\x1B[31mfailed: error\x1B[0m\nerror\n");
+
+const cmd = "node ./examples/test.failure.js";
+const log = $(cmd).trim().replace(/\n/g, "");
 assert.strictEqual(log.includes("failed: failure"), true); // includes failure message with test name
 assert.strictEqual(log.includes("at "), true); // include stack trace
 assert.strictEqual(log.includes("test.failure.js"), true);
+console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
+
+t(
+  "node ./examples/test.queue.js",
+  "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n\x1B[32msuccess: third\x1B[0m\n"
+);
