@@ -1,4 +1,4 @@
-// using NodeJS' assert library to test fast-test
+// using NodeJS' assert library to test flug
 const assert = require("assert");
 const child_process = require("child_process");
 
