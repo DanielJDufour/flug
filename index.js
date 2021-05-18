@@ -1,4 +1,5 @@
 const { deepStrictEqual } = require("assert");
+const { readFileSync } = require("fs");
 
 const DEEP_STRICT_EQUAL_ERROR_MESSAGE = "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:";
 
@@ -6,26 +7,46 @@ const TIME_MS = 250;
 
 const queue = [];
 
+const COLOR_BLUE = "\x1b[34m";
+const COLOR_YELLOW = "\x1b[33m";
+const COLOR_PURPLE = "\x1b[35m";
+const NO_COLOR = "\x1B[39m";
+
+const PLUS = COLOR_YELLOW + "+" + NO_COLOR;
+const MINUS = COLOR_PURPLE + "-" + NO_COLOR;
+
 const run = async (name, cb) => {
+  let savedActual, savedExpected;
+  const eq = (actual, expected) => {
+    savedActual = actual;
+    savedExpected = expected;
+    return deepStrictEqual(actual, expected);
+  };
+
   try {
-    await Promise.resolve(cb({ eq: deepStrictEqual }));
+    await Promise.resolve(cb({ eq }));
     console.log("\x1b[32m%s\x1b[0m", "success: " + name);
   } catch (error) {
     console.error("\n\x1b[31m%s\x1b[0m", "failed: " + name);
     let msg = error.toString();
     if (msg.startsWith(DEEP_STRICT_EQUAL_ERROR_MESSAGE)) {
-      // console.log({msg});
-      // console.log({stack: error.stack});
       let output;
-      // const output = msg.replace(DEEP_STRICT_EQUAL_ERROR_MESSAGE, "");
       output = msg
         .split("\n")
         .slice(3) // remove first three lines
         .join("\n")
-        .replace("\x1B[32m+\x1B[39m", "    received:")
-        .replace("\x1B[31m-\x1B[39m", "    expected:");
+        .replaceAll("\x1B[32m+\x1B[39m", `    ${PLUS}:`)
+        .replaceAll("\x1B[31m-\x1B[39m", `    ${MINUS}:`);
 
-      output += "\n";
+      let stringable = false;
+      try {
+        stringable = JSON.stringify(savedActual).length < 200 && JSON.stringify(savedExpected).length < 200;
+      } catch (error) {}
+      if (stringable) {
+        output = `${COLOR_PURPLE}expected:${NO_COLOR} ${JSON.stringify(savedExpected)}\n${COLOR_YELLOW}received:${NO_COLOR} ${JSON.stringify(savedActual)}\n`;
+      } else if (output.includes(PLUS) || output.includes(MINUS)) {
+        output += `\nkey:   ${COLOR_YELLOW}received +${NO_COLOR}   ${COLOR_PURPLE}expected: -${NO_COLOR}\n`;
+      }
 
       const stack_lines = error.stack.split("\n");
       const filtered_lines = stack_lines
@@ -33,9 +54,18 @@ const run = async (name, cb) => {
           stack_lines.findIndex(ln => ln.trim().startsWith("at")),
           stack_lines.findIndex(ln => ln.includes("node:internal"))
         )
-        .join("\n");
-      output += filtered_lines;
+        .filter(ln => !ln.includes("flug/index") && !ln.includes("runMicrotasks (<anonymous>)"));
 
+      try {
+        const ln = filtered_lines[0];
+        const [filepath, row, col] = ln.replace("at", "").trim().split(":");
+        const text = readFileSync(filepath, "utf-8")
+          .split(/\n\r?/g)
+          [row - 1].substring(col - 1);
+        output += `${COLOR_BLUE}line:${NO_COLOR} "${text}"`;
+      } catch (error) {}
+      output += "\n\n";
+      output += filtered_lines.join("\n");
       output += "\n\n";
       console.error(output);
     } else {
@@ -56,8 +86,7 @@ const test = (name, cb) => {
         setTimeout(process, TIME_MS);
       }
     };
-
-    const timeout = setTimeout(process, TIME_MS);
+    setTimeout(process, TIME_MS);
   }
 };
 

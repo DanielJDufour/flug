@@ -29,7 +29,4 @@ assert.strictEqual(log.includes("at "), true); // include stack trace
 assert.strictEqual(log.includes("test.failure.js"), true);
 console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
 
-t(
-  "node ./examples/test.queue.js",
-  "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n\x1B[32msuccess: third\x1B[0m\n"
-);
+t("node ./examples/test.queue.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n\x1B[32msuccess: third\x1B[0m\n");
