@@ -71,6 +71,7 @@ const run = async (name, cb) => {
     } else {
       console.error(error);
     }
+    process.exit();
   }
 };
 
