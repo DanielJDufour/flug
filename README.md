@@ -24,6 +24,9 @@ Flug exposes only one assertion function `eq`, which does deep equality checking
 - not designed for large libraries with hundreds of tests
 - only works on NodeJS
 
+# advanced usage
+You can read more about advanced features [here](https://github.com/DanielJDufour/flug/blob/main/ADVANCED_USAGE.md).
+
 # install
 ```bash
 npm install flug

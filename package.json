@@ -7,7 +7,8 @@
     "index.js"
   ],
   "scripts": {
-    "format": "npx prettier --arrow-parens=avoid --print-width=260 --write *.js */**.js",
+    "format": "npx prettier --arrow-parens=avoid --print-width=500 --write *.js */**.js",
+    "lint": "node lint.js",
     "test": "node test.js"
   },
   "repository": {
