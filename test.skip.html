@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="./index.js"></script>
+    <script>
+      process = { env: { TEST_NAME: "1 + 1 = 2" }};
+    </script>
+  </head>
+  <body>
+    <script>
+      flug.test("1 + 1 = 2", ({ eq }) => {
+        eq(1 + 1, 2);
+      });
+
+      flug.test("1 + 1 != 1", ({ eq }) => {
+        eq(1 + 1, 1);
+      });
+    </script>
+  </body>
+</html>

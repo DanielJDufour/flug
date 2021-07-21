@@ -7,13 +7,14 @@
 # features
 - Only One Assertion Function
 - Easy Startup
+- Works in Browser and NodeJS
 - Light Weight (~4KB)
 - Sane Defaults
 - Zero Dependencies
 - Fixed Order
 - Async Support
 - Simple By Design
-- Exit on First Failure
+- Exit on First Failure (NodeJS Only)
 
 # background
 There's a lot of awesome assertions libraries out there with a lot of awesome assertion functions.  But the reality is that I have struggled to remember all the names of the assertion functions.  Is it `t.eq` or `t.is`?  Is it `deepStrictEqual` or `strictDeepEqual`?  I needed a simpler, more memorable testing inteface, so I built Flug.
@@ -22,7 +23,6 @@ Flug exposes only one assertion function `eq`, which does deep equality checking
 
 # limitations
 - not designed for large libraries with hundreds of tests
-- only works on NodeJS
 
 # advanced usage
 You can read more about advanced features [here](https://github.com/DanielJDufour/flug/blob/main/ADVANCED_USAGE.md).
@@ -48,4 +48,14 @@ test("sleep", async ({ eq }) => {
 });
 ```
 
+# browser usage
+```html
+<script src="https://unpkg.com/flug"></script>
+
+<script>
+  flug.test("addition", ({ eq }) => {
+    eq(1 + 1, 2);
+  });  
+</script>
+```
 # And that's it!

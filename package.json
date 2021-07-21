@@ -9,7 +9,8 @@
   "scripts": {
     "format": "npx prettier --arrow-parens=avoid --print-width=500 --write *.js */**.js",
     "lint": "node lint.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "test:html": "npx http-server"
   },
   "repository": {
     "type": "git",

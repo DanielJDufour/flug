@@ -1,3 +1,11 @@
+// in the browser, require returns an empty object
+const env = typeof window === "object" ? "browser" : "node";
+
+if (env === "browser") {
+  window.require = () => ({});
+  window.process = { env: {} };
+}
+
 const { deepStrictEqual } = require("assert");
 const { readFileSync } = require("fs");
 
@@ -7,19 +15,35 @@ const COLORS = { BLUE: "\x1b[34m", GREEN: "\x1b[32m", YELLOW: "\x1b[33m", PURPLE
 const PLUS = COLORS.YELLOW + "+" + COLORS.OFF;
 const MINUS = COLORS.PURPLE + "-" + COLORS.OFF;
 
+/** print out caller file path on top of each */
 const queue = [];
+const complete = [];
 
-const run = async (name, cb) => {
+const run = async ({ name, cb, caller }) => {
   let savedActual, savedExpected;
   const eq = (actual, expected) => {
     savedActual = actual;
     savedExpected = expected;
-    return deepStrictEqual(actual, expected);
+    if (deepStrictEqual) {
+      return deepStrictEqual(actual, expected);
+    } else if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      console.log("%c failed: " + name, "color: red");
+      console.log("%c\texpected:", "color: purple", expected);
+      console.log("%c\treceived:", "color: rgb(200, 200, 0)", actual);
+      throw new Error("");
+    }
   };
 
   try {
     await Promise.resolve(cb({ eq }));
-    console.log(COLORS.GREEN + "%s\x1b[0m", "success: " + name);
+    if (caller !== complete[complete.length - 1]) {
+      // console.log("\n\n" + caller.split(":")[0]);
+    }
+    if (env === "browser") {
+      console.log("%c success: " + name, "color: green");
+    } else {
+      console.log(COLORS.GREEN + "%s\x1b[0m", "success: " + name);
+    }
   } catch (error) {
     console.error("\n" + COLORS.RED + "%s\x1b[0m", "failed: " + name);
     let msg = error.toString();
@@ -60,27 +84,48 @@ const run = async (name, cb) => {
     } else {
       console.error(error);
     }
-    process.exit();
+    if (env === "node") {
+      process.exit();
+    }
   }
 };
 
-const skip = name => console.log(COLORS.YELLOW + "skipped: " + name + COLORS.OFF);
+const skip = name => {
+  if (env === "browser") {
+    console.log("%c skipped: " + name, "color: rgb(200, 200, 0)");
+  } else {
+    console.log(COLORS.YELLOW + "skipped: " + name + COLORS.OFF);
+  }
+};
 
 const test = (name, cb) => {
+  let caller;
+  try {
+    const lines = Error().stack.split(/ *\n\r? */g);
+    const ln = lines[2];
+    if (env === "browser") {
+      // in Browser, at http://localhost:8080/test.html:8:12
+      caller = ln.replace("at ", "").trim();
+    } else {
+      // in NodeJS, at Object.<anonymous> (/path/to/file.js:3:1)
+      caller = ln.substring(ln.indexOf("(") + 1, ln.lastIndexOf(")"));
+    }
+  } catch (error) {
+    caller = undefined;
+  }
+
   if (process.env.TEST_NAME && process.env.TEST_NAME !== name) return skip(name);
 
   if (process.env.TEST_FILE || process.env.TEST_DIR) {
-    const ln = Error().stack.split(/ *\n\r? */g)[2];
-    const fp = ln.substring(ln.indexOf("(") + 1, ln.lastIndexOf(")")).split("/");
-    if ((process.env.TEST_FILE && process.env.TEST_FILE !== fp.slice(-1)[0].split(":")[0]) || (process.env.TEST_DIR && process.env.TEST_DIR !== fp.slice(-2, -1)[0])) return skip(name);
+    if ((process.env.TEST_FILE && process.env.TEST_FILE !== caller.split("/").slice(-1)[0].split(":")[0]) || (process.env.TEST_DIR && process.env.TEST_DIR !== caller.split("/").slice(-2, -1)[0])) return skip(name);
   }
 
-  queue.push(name);
+  queue.push({ name, caller });
 
   const proceed = async () => {
-    if (queue[0] === name) {
-      await Promise.resolve(run(name, cb));
-      queue.shift(); // remove first test in queue
+    if (queue[0].name === name) {
+      await Promise.resolve(run({ name, cb, caller }));
+      complete.push(queue.shift()); // remove first test in queue
     } else {
       setTimeout(proceed, TIME_MS);
     }
@@ -88,4 +133,12 @@ const test = (name, cb) => {
   setTimeout(proceed, TIME_MS);
 };
 
-module.exports = test;
+if (typeof module === "object") {
+  // seem to be in NodeJS
+  module.exports = test;
+}
+
+if (typeof window == "object") {
+  // seem to be in a browser
+  window.flug = { test };
+}
