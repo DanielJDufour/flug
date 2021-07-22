@@ -53,7 +53,9 @@ test("sleep", async ({ eq }) => {
 <script src="https://unpkg.com/flug"></script>
 
 <script>
-  flug.test("addition", ({ eq }) => {
+  const { test } = flug;
+  
+  test("addition", ({ eq }) => {
     eq(1 + 1, 2);
   });  
 </script>
