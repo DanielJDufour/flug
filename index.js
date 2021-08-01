@@ -131,6 +131,15 @@ const test = (name, cb) => {
     }
   };
   setTimeout(proceed, TIME_MS);
+
+  // checkQueue keeps the main thread alive
+  // until the queue is complete
+  const checkQueue = () => {
+    if (queue.length > 0) {
+      setTimeout(checkQueue, TIME_MS);
+    }
+  };
+  checkQueue();
 };
 
 if (typeof module === "object") {
