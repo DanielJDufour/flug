@@ -21,7 +21,10 @@ const complete = [];
 
 const run = async ({ name, cb, caller }) => {
   let savedActual, savedExpected;
-  const eq = (actual, expected) => {
+  const eq = function (actual, expected) {
+    if (arguments.length === 1) {
+      throw new Error("you only supplied one argument");
+    }
     savedActual = actual;
     savedExpected = expected;
     if (deepStrictEqual) {

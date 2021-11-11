@@ -34,3 +34,7 @@ t("node ./examples/test.queue.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msucce
 t("node ./examples/test.filename.js", "\x1B[33mskipped: invalid filename\x1B[39m\n\x1B[32msuccess: valid filename\x1B[0m\n");
 
 t("node ./examples/test.dir.js", "\x1B[33mskipped: invalid dir\x1B[39m\n\x1B[32msuccess: valid dir\x1B[0m\n");
+
+const cmd2 = "node ./examples/test.only-one-arg.js";
+const log2 = $(cmd2).trim().replace(/\n/g, "");
+assert.strictEqual(log2.includes("you only supplied one argument"), true);
