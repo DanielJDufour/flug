@@ -20,7 +20,7 @@ const t = (cmd, expected) => {
 };
 
 t("node ./examples/test.addition.js", "\x1B[32msuccess: addition\x1B[0m\n");
-t("node ./examples/test.error.js", "\n\x1B[31mfailed: error\x1B[0m\nerror\n");
+t("node ./examples/test.error.js", "\n\x1B[31mfailed: error\x1B[0m\nerror\n\n\n");
 
 const cmd = "node ./examples/test.failure.js";
 const log = $(cmd).trim().replace(/\n/g, "");

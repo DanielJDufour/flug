@@ -50,6 +50,16 @@ const run = async ({ name, cb, caller }) => {
   } catch (error) {
     console.error("\n" + COLORS.RED + "%s\x1b[0m", "failed: " + name);
     let msg = error.toString();
+
+    const stack_lines = typeof error.stack === "string" ? error.stack.split("\n") : [];
+    const filtered_lines = stack_lines
+      .slice(
+        stack_lines.findIndex(ln => ln.trim().startsWith("at")),
+        stack_lines.findIndex(ln => ln.includes("node:internal"))
+      )
+      .filter(ln => !ln.includes("flug/index") && !ln.includes("runMicrotasks (<anonymous>)"));
+    const new_stack = filtered_lines.join("\n");
+
     if (msg.startsWith(DEEP_STRICT_EQUAL_ERROR_MESSAGE)) {
       let output;
       output = msg.split("\n").slice(3).join("\n").replaceAll("\x1B[32m+\x1B[39m", `    ${PLUS}:`).replaceAll("\x1B[31m-\x1B[39m", `    ${MINUS}:`);
@@ -64,14 +74,6 @@ const run = async ({ name, cb, caller }) => {
         output += `\nkey:   ${COLORS.YELLOW}received +${COLORS.OFF}   ${COLORS.PURPLE}expected: -${COLORS.OFF}\n`;
       }
 
-      const stack_lines = error.stack.split("\n");
-      const filtered_lines = stack_lines
-        .slice(
-          stack_lines.findIndex(ln => ln.trim().startsWith("at")),
-          stack_lines.findIndex(ln => ln.includes("node:internal"))
-        )
-        .filter(ln => !ln.includes("flug/index") && !ln.includes("runMicrotasks (<anonymous>)"));
-
       try {
         const ln = filtered_lines[0];
         const [filepath, row, col] = ln.replace("at", "").trim().split(":");
@@ -79,13 +81,23 @@ const run = async ({ name, cb, caller }) => {
           .split(/\n\r?/g)
           [row - 1].substring(col - 1);
         output += `${COLORS.BLUE}line:${COLORS.OFF} "${text}"`;
-      } catch (error) {}
+      } catch (e) {
+        // pass
+      }
       output += "\n\n";
-      output += filtered_lines.join("\n");
-      output += "\n\n";
+      if (new_stack.length > 0) {
+        output += new_stack;
+        output += "\n\n";
+      }
       console.error(output);
     } else {
-      console.error(error);
+      let output = msg;
+      output += "\n\n";
+      if (new_stack.length > 0) {
+        output += new_stack;
+        output += "\n\n";
+      }
+      console.error(output);
     }
     if (env === "node") {
       process.exit();
