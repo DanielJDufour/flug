@@ -129,7 +129,17 @@ const test = (name, cb) => {
     caller = undefined;
   }
 
-  if (process.env.TEST_NAME && process.env.TEST_NAME !== name) return skip(name);
+  if (process.env.TEST_NAME) {
+    const testName = process.env.TEST_NAME;
+    if (testName.includes("*")) {
+      const re = new RegExp("^" + process.env.TEST_NAME.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$", "g");
+      if (!re.test(name)) {
+        return skip(name);
+      }
+    } else if (testName !== name) {
+      return skip(name);
+    }
+  }
 
   if (process.env.TEST_FILE || process.env.TEST_DIR) {
     if ((process.env.TEST_FILE && process.env.TEST_FILE !== caller.split("/").slice(-1)[0].split(":")[0]) || (process.env.TEST_DIR && process.env.TEST_DIR !== caller.split("/").slice(-2, -1)[0])) return skip(name);

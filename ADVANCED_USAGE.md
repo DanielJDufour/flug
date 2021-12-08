@@ -4,6 +4,8 @@ You can limit which tests are run through the following environmental variables:
 #### TEST_NAME
 You can run only tests that match a given name (usually only one test) like:
 ```TEST_NAME="calculate sum" npm test```
+You can also use a wildcard in the name like:
+```TEST_NAME="calculate population of *" npm test```
 
 #### TEST_FILE
 You can run only run tests in files with a specific name like:
