@@ -23,7 +23,7 @@ const run = async ({ name, cb, caller }) => {
   let savedActual, savedExpected;
   const eq = function (actual, expected) {
     if (arguments.length === 1) {
-      throw new Error("you only supplied one argument");
+      throw new Error("[flug] you only supplied one argument");
     }
     savedActual = actual;
     savedExpected = expected;
@@ -167,9 +167,16 @@ const test = (name, cb) => {
   checkQueue();
 };
 
+if (typeof define === "function" && define.amd) {
+  define(function () {
+    return test;
+  });
+}
+
 if (typeof module === "object") {
   // seem to be in NodeJS
   module.exports = test;
+  module.exports.default = test;
 }
 
 if (typeof window == "object") {

@@ -3,7 +3,9 @@
   "version": "2.2.0",
   "description": "Flug: The Test Runner with the Shortest Time to Takeoff",
   "main": "index.js",
+  "types": "./flug.d.ts",
   "files": [
+    "flug.d.ts",
     "index.js"
   ],
   "scripts": {
