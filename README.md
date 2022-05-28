@@ -15,6 +15,7 @@
 - Async Support
 - Simple By Design
 - Exit on First Failure (NodeJS Only)
+- TypeScript Support
 
 # background
 There's a lot of awesome assertions libraries out there with a lot of awesome assertion functions.  But the reality is that I have struggled to remember all the names of the assertion functions.  Is it `t.eq` or `t.is`?  Is it `deepStrictEqual` or `strictDeepEqual`?  I needed a simpler, more memorable testing inteface, so I built Flug.
