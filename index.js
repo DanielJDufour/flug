@@ -132,7 +132,7 @@ const test = (name, cb) => {
   if (process.env.TEST_NAME) {
     const testName = process.env.TEST_NAME;
     if (testName.includes("*")) {
-      const re = new RegExp("^" + process.env.TEST_NAME.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$", "g");
+      const re = new RegExp("^" + process.env.TEST_NAME.replace(/\./g, "\\.").replace(/\*/g, ".*").replace(/\[/, "\\[").replace(/\]/, "\\]") + "$", "g");
       if (!re.test(name)) {
         return skip(name);
       }
