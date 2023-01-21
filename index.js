@@ -38,14 +38,18 @@ const run = async ({ name, cb, caller }) => {
   };
 
   try {
+    const start_time = performance.now();
     await Promise.resolve(cb({ eq }));
     if (caller !== complete[complete.length - 1]) {
       // console.log("\n\n" + caller.split(":")[0]);
     }
+    const end_time = performance.now();
+    const test_time = Math.round(end_time - start_time).toLocaleString() + "ms";
+    const TIMED = ["True", "TRUE", "true", "t", "1", ""].includes(process.env.TIMED);
     if (env === "browser") {
-      console.log("%c success: " + name, "color: green");
+      console.log("%c success" + (TIMED ? " (" + test_time + ")" : "") + ": " + name, "color: green");
     } else {
-      console.log(COLORS.GREEN + "%s\x1b[0m", "success: " + name);
+      console.log(COLORS.GREEN + "%s\x1b[0m", "success" + (TIMED ? " (" + test_time + ")" : "") + ": " + name);
     }
   } catch (error) {
     console.error("\n" + COLORS.RED + "%s\x1b[0m", "failed: " + name);

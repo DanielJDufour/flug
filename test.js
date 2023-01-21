@@ -10,12 +10,21 @@ const $ = str => {
 
 const t = (cmd, expected) => {
   const out = $(cmd);
-  try {
-    assert.strictEqual(out, expected);
-    console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
-  } catch (error) {
-    console.log("out:", [out]);
-    throw error;
+  if (expected instanceof RegExp) {
+    if (out.match(expected)) {
+      console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
+    } else {
+      console.log("out:", [out]);
+      throw new Error("failed");
+    }
+  } else {
+    try {
+      assert.strictEqual(out, expected);
+      console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
+    } catch (error) {
+      console.log("out:", [out]);
+      throw error;
+    }
   }
 };
 
@@ -28,6 +37,8 @@ assert.strictEqual(log.includes("failed: failure"), true); // includes failure m
 assert.strictEqual(log.includes("at "), true); // include stack trace
 assert.strictEqual(log.includes("test.failure.js"), true);
 console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
+
+t("node ./examples/test.timed.js", /\x1B\[32msuccess \((0|1)ms\)\: timed\x1B\[0m\n/);
 
 t("node ./examples/test.queue.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n\x1B[32msuccess: third\x1B[0m\n");
 

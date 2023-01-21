@@ -14,3 +14,13 @@ You can run only run tests in files with a specific name like:
 #### TEST_DIR
 You can run only run tests in folders with a specific name like:
 ```TEST_DIR="v1" npm test```
+
+#### TIMED
+You can log the time it takes to run each test like  
+```TIMED=true npm test```  
+Output will look like this:
+<pre>
+<span style="color: green">success (324ms): name of test</span>
+<span style="color: green">success (461ms): name of another test</span>
+</pre>
+
