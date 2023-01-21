@@ -45,7 +45,7 @@ const run = async ({ name, cb, caller }) => {
     }
     const end_time = performance.now();
     const test_time = Math.round(end_time - start_time).toLocaleString() + "ms";
-    const TIMED = ["True", "TRUE", "true", "t", "1", ""].includes(process.env.FLUG_TIMED);
+    const TIMED = ["True", "TRUE", "true", "t", "1", ""].includes(process.env.TIME);
     if (env === "browser") {
       console.log("%c success" + (TIMED ? " (" + test_time + ")" : "") + ": " + name, "color: green");
     } else {
@@ -110,10 +110,12 @@ const run = async ({ name, cb, caller }) => {
 };
 
 const skip = name => {
-  if (env === "browser") {
-    console.log("%c skipped: " + name, "color: rgb(200, 200, 0)");
-  } else {
-    console.log(COLORS.YELLOW + "skipped: " + name + COLORS.OFF);
+  if (!["false", "False", "FALSE", "0"].includes(process.env.LOG_SKIP)) {
+    if (env === "browser") {
+      console.log("%c skipped: " + name, "color: rgb(200, 200, 0)");
+    } else {
+      console.log(COLORS.YELLOW + "skipped: " + name + COLORS.OFF);
+    }
   }
 };
 

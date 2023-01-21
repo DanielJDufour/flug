@@ -17,10 +17,14 @@ You can run only run tests in folders with a specific name like:
 
 #### TIMED
 You can log the time it takes to run each test like  
-```FLUG_TIMED=true npm test```  
+```TIME=true npm test```  
 Output will look like this:
 <pre>
 <span style="color: green">success (324ms): name of test</span>
 <span style="color: green">success (461ms): name of another test</span>
 </pre>
 
+#### LOG_SKIP
+You can suppress logging the information about which tests were skipped.
+This can be helpful when you are skipping hundreds of tests.
+```LOG_SKIP=false npm test```
