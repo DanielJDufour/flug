@@ -1,6 +1,6 @@
 {
   "name": "flug",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Flug: The Test Runner with the Shortest Time to Takeoff",
   "main": "index.js",
   "types": "./flug.d.ts",
