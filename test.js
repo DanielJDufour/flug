@@ -1,11 +1,23 @@
 // using NodeJS' assert library to test flug
-const assert = require("assert");
-const child_process = require("child_process");
+const assert = require("node:assert");
+const child_process = require("node:child_process");
+const fs = require("node:fs");
 
 const $ = str => {
-  const output = child_process.execSync(str + " 2>&1", { cwd: __dirname }).toString();
-  // console.log("output:", output);
-  return output;
+  try {
+    const output = child_process.execSync(str + " 2>&1", {
+      cwd: __dirname,
+      stdio: [
+        0,
+        fs.openSync('log.out', 'w'),
+        fs.openSync('err.out', 'w')
+      ]
+     }).toString();
+    return output;
+  } catch (error) {
+    const msg = fs.readFileSync('log.out', 'utf-8');
+    return msg;
+  }
 };
 
 const t = (cmd, expected) => {
