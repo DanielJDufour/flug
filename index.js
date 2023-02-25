@@ -104,7 +104,7 @@ const run = async ({ name, cb, caller }) => {
       console.error(output);
     }
     if (env === "node") {
-      process.exit();
+      process.exit(1);
     }
   }
 };
