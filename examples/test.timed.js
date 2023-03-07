@@ -1,5 +1,5 @@
 const test = require("../index.js");
 
-process.env.TIME = "true";
+process.env.TEST_TIMED = "true";
 
 test("timed", ({ eq }) => {});

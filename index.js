@@ -45,7 +45,7 @@ const run = async ({ name, cb, caller }) => {
     }
     const end_time = performance.now();
     const test_time = Math.round(end_time - start_time).toLocaleString() + "ms";
-    const TIMED = ["True", "TRUE", "true", "t", "1", ""].includes(process.env.TIME);
+    const TIMED = ["True", "TRUE", "true", "t", "1", "", true, 1].includes(process.env.TEST_TIMED);
     if (env === "browser") {
       console.log("%c success" + (TIMED ? " (" + test_time + ")" : "") + ": " + name, "color: green");
     } else {
