@@ -5,17 +5,15 @@ const fs = require("node:fs");
 
 const $ = str => {
   try {
-    const output = child_process.execSync(str + " 2>&1", {
-      cwd: __dirname,
-      stdio: [
-        0,
-        fs.openSync('log.out', 'w'),
-        fs.openSync('err.out', 'w')
-      ]
-     }).toString();
+    const output = child_process
+      .execSync(str + " 2>&1", {
+        cwd: __dirname,
+        stdio: [0, fs.openSync("log.out", "w"), fs.openSync("err.out", "w")],
+      })
+      .toString();
     return output;
   } catch (error) {
-    const msg = fs.readFileSync('log.out', 'utf-8');
+    const msg = fs.readFileSync("log.out", "utf-8");
     return msg;
   }
 };
