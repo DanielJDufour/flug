@@ -74,6 +74,8 @@ const run = async ({ name, cb, caller }) => {
       } catch (error) {}
       if (stringable) {
         output = `${COLORS.PURPLE}expected:${COLORS.OFF} ${JSON.stringify(savedExpected)}\n${COLORS.YELLOW}received:${COLORS.OFF} ${JSON.stringify(savedActual)}\n`;
+      } else if (`${savedActual}`.indexOf("[object") === -1 && `${savedExpected}`.indexOf("[object") === -1) {
+        output = `${COLORS.PURPLE}expected:${COLORS.OFF} ${savedExpected}\n${COLORS.YELLOW}received:${COLORS.OFF} ${savedActual}\n`;
       } else if (output.includes(PLUS) || output.includes(MINUS)) {
         output += `\nkey:   ${COLORS.YELLOW}received +${COLORS.OFF}   ${COLORS.PURPLE}expected: -${COLORS.OFF}\n`;
       }
