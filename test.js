@@ -8,7 +8,7 @@ const $ = str => {
     const output = child_process
       .execSync(str + " 2>&1", {
         cwd: __dirname,
-        stdio: [0, fs.openSync("log.out", "w"), fs.openSync("err.out", "w")],
+        stdio: [0, fs.openSync("log.out", "w"), fs.openSync("err.out", "w")]
       })
       .toString();
     return output;
