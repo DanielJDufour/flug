@@ -167,7 +167,7 @@ const test = (name, cb) => {
   queue.push({ name, caller });
 
   const proceed = async () => {
-    if (queue[0].name === name) {
+    if (queue[0].name === name && queue[0].caller === caller) {
       await Promise.resolve(run({ name, cb, caller }));
       complete.push(queue.shift()); // remove first test in queue
     } else {
