@@ -61,6 +61,12 @@ t("node ./examples/test.name.js", "\x1B[33mskipped: skip\x1B[39m\n\x1B[32msucces
 
 t("node ./examples/test.name-wildcard.js", "\x1B[33mskipped: skip\x1B[39m\n\x1B[32msuccess: only[this]\x1B[0m\n");
 
+const start_test_gap = performance.now();
+t("node ./examples/test.gap.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n");
+const end_test_gap = performance.now();
+const duration_test_gap = Math.round((end_test_gap - start_test_gap) / 1000);
+assert.strictEqual(duration_test_gap, 3);
+
 const cmd2 = "node ./examples/test.only-one-arg.js";
 const log2 = $(cmd2).trim().replace(/\n/g, "");
 assert.strictEqual(log2.includes("you only supplied one argument"), true);

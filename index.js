@@ -19,6 +19,13 @@ const MINUS = COLORS.PURPLE + "-" + COLORS.OFF;
 const queue = [];
 const complete = [];
 
+const sleep = ms =>
+  new Promise(resolve => {
+    setTimeout(() => resolve(), ms);
+  });
+
+let ran = 0;
+
 const run = async ({ name, cb, caller }) => {
   let savedActual, savedExpected;
   const eq = function (actual, expected) {
@@ -38,6 +45,8 @@ const run = async ({ name, cb, caller }) => {
   };
 
   try {
+    if (ran >= 1 && process.env.TEST_GAP_TIME) await sleep(Number(process.env.TEST_GAP_TIME) * 1000);
+
     const start_time = performance.now();
     await Promise.resolve(cb({ eq }));
     if (caller !== complete[complete.length - 1]) {
@@ -109,6 +118,8 @@ const run = async ({ name, cb, caller }) => {
       process.exit(1);
     }
   }
+
+  ran++;
 };
 
 const skip = name => {

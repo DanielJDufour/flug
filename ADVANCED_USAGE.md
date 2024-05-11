@@ -28,3 +28,8 @@ Output will look like this:
 You can suppress logging the information about which tests were skipped.
 This can be helpful when you are skipping hundreds of tests.
 ```LOG_SKIP=false npm test```
+
+#### TEST_GAP_TIME
+You can pause in between tests.  This helps if there are side effects
+that need time to complete. Gap time is in seconds.
+```TEST_GAP_TIME=3.5 npm test```
