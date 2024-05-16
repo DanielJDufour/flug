@@ -19,9 +19,9 @@ const MINUS = COLORS.PURPLE + "-" + COLORS.OFF;
 const queue = [];
 const complete = [];
 
-const sleep = ms =>
+const sleep_seconds = duration =>
   new Promise(resolve => {
-    setTimeout(() => resolve(), ms);
+    setTimeout(() => resolve(), duration * 1000);
   });
 
 let ran = 0;
@@ -45,10 +45,28 @@ const run = async ({ name, cb, caller }) => {
   };
 
   try {
-    if (ran >= 1 && process.env.TEST_GAP_TIME) await sleep(Number(process.env.TEST_GAP_TIME) * 1000);
+    const GAP_TIME = Number(process.env.TEST_GAP_TIME || 0);
 
     const start_time = performance.now();
-    await Promise.resolve(cb({ eq }));
+
+    // we use all these setTimeout calls
+    // to mitigate the ability of side-effects
+    // to block the main thread
+    await new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        if (ran >= 1 && GAP_TIME) {
+          await sleep_seconds(GAP_TIME);
+        }
+        try {
+          await cb({ eq });
+        } catch (error) {
+          reject(error);
+        }
+        setTimeout(() => {
+          resolve();
+        }, 1);
+      }, 1);
+    });
     if (caller !== complete[complete.length - 1]) {
       // console.log("\n\n" + caller.split(":")[0]);
     }

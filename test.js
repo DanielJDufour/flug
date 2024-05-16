@@ -49,7 +49,7 @@ assert.strictEqual(log.includes("at "), true); // include stack trace
 assert.strictEqual(log.includes("test.failure.js"), true);
 console.log("\x1B[32msuccessfully\x1B[0m ran " + cmd);
 
-t("node ./examples/test.timed.js", /\x1B\[32msuccess \((0|1)ms\)\: timed\x1B\[0m\n/);
+t("node ./examples/test.timed.js", /\x1B\[32msuccess \((\d)ms\)\: timed\x1B\[0m\n/);
 
 t("node ./examples/test.queue.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n\x1B[32msuccess: third\x1B[0m\n");
 
@@ -65,7 +65,7 @@ const start_test_gap = performance.now();
 t("node ./examples/test.gap.js", "\x1B[32msuccess: first\x1B[0m\n\x1B[32msuccess: second\x1B[0m\n");
 const end_test_gap = performance.now();
 const duration_test_gap = Math.round((end_test_gap - start_test_gap) / 1000);
-assert.strictEqual(duration_test_gap, 3);
+assert.strictEqual(duration_test_gap >= 3 && duration_test_gap <= 5, true);
 
 const cmd2 = "node ./examples/test.only-one-arg.js";
 const log2 = $(cmd2).trim().replace(/\n/g, "");
